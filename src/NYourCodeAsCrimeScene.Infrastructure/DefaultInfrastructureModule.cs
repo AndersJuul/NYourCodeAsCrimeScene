@@ -7,6 +7,7 @@ using NYourCodeAsCrimeScene.Infrastructure.Data;
 using NYourCodeAsCrimeScene.SharedKernel.Interfaces;
 using MediatR;
 using MediatR.Pipeline;
+using NYourCodeAsCrimeScene.Core.Services;
 using Module = Autofac.Module;
 
 namespace NYourCodeAsCrimeScene.Infrastructure
@@ -44,7 +45,9 @@ namespace NYourCodeAsCrimeScene.Infrastructure
 
         private void RegisterCommonDependencies(ContainerBuilder builder)
         {
-            builder.RegisterType<EfRepository>().As<IRepository>()
+            builder
+                .RegisterType<EfRepository>()
+                .As<IRepository>()
                 .InstancePerLifetimeScope();
 
             builder
@@ -52,6 +55,11 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 .As<IMediator>()
                 .InstancePerLifetimeScope();
 
+            builder
+                .RegisterType<UpdaterService>()
+                .As<IUpdaterService>()
+                .InstancePerLifetimeScope();
+            
             builder.Register<ServiceFactory>(context =>
             {
                 var c = context.Resolve<IComponentContext>();
@@ -74,7 +82,9 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 .AsImplementedInterfaces();
             }
 
-            builder.RegisterType<EmailSender>().As<IEmailSender>()
+            builder
+                .RegisterType<EmailSender>()
+                .As<IEmailSender>()
                 .InstancePerLifetimeScope();
         }
 

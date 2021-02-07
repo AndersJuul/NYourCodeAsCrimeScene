@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using NYourCodeAsCrimeScene.Web.HostedServices;
 
 namespace NYourCodeAsCrimeScene.Web
 {
@@ -52,6 +53,8 @@ namespace NYourCodeAsCrimeScene.Web
 				// optional - default path to view services is /listallservices - recommended to choose your own path
 				config.Path = "/listservices";
 			});
+
+            services.AddHostedService<UpdaterHostedService>();
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)

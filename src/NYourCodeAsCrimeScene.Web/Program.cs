@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using NYourCodeAsCrimeScene.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,8 @@ namespace NYourCodeAsCrimeScene.Web
                 try
                 {
                     var context = services.GetRequiredService<AppDbContext>();
-//                    context.Database.Migrate();
-                    context.Database.EnsureCreated();
+                    context.Database.Migrate();
+                    //context.Database.EnsureCreated();
                     SeedData.Initialize(services);
                 }
                 catch (Exception ex)
