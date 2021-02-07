@@ -31,7 +31,7 @@ namespace NYourCodeAsCrimeScene.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			string connectionString = Configuration.GetConnectionString("SqliteConnection");  //Configuration.GetConnectionString("DefaultConnection");
+			string connectionString = Configuration.GetConnectionString("ConnectionString");  
 
 
 			services.AddDbContext(connectionString);
