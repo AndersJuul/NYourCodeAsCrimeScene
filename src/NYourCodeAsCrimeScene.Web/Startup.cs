@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using NYourCodeAsCrimeScene.Web.HostedServices;
+using NYourCodeAsCrimeScene.Web.Options;
 
 namespace NYourCodeAsCrimeScene.Web
 {
@@ -55,6 +56,9 @@ namespace NYourCodeAsCrimeScene.Web
 			});
 
             services.AddHostedService<UpdaterHostedService>();
+
+			services.AddOptions();
+            services.Configure<GithubConnectionOptions>(Configuration.GetSection("GithubConnection"));
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)

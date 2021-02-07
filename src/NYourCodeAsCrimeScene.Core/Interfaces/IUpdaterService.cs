@@ -4,6 +4,6 @@ namespace NYourCodeAsCrimeScene.Core.Interfaces
 {
     public interface IUpdaterService
     {
-        Task Update();
+        Task Update(string accessToken);
     }
 }

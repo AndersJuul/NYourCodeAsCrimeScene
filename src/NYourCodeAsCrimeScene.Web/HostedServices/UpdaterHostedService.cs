@@ -2,22 +2,25 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using NYourCodeAsCrimeScene.Core.Interfaces;
-using NYourCodeAsCrimeScene.Core.Services;
+using NYourCodeAsCrimeScene.Web.Options;
 
 namespace NYourCodeAsCrimeScene.Web.HostedServices
 {
     public class UpdaterHostedService: IHostedService, IDisposable
     {
         private readonly IUpdaterService _updaterService;
+        private readonly GithubConnectionOptions _options;
 
-        public UpdaterHostedService(IUpdaterService updaterService)
+        public UpdaterHostedService(IUpdaterService updaterService, IOptions<GithubConnectionOptions> options)
         {
             _updaterService = updaterService;
+            _options = options.Value;
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _updaterService.Update();
+            await _updaterService.Update(_options.ApiKey);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
