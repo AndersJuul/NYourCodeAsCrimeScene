@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GithubClient;
 using NYourCodeAsCrimeScene.Core.Interfaces;
 
 namespace NYourCodeAsCrimeScene.Core.Services
 {
     public class UpdaterService : IUpdaterService
     {
+        private readonly IGithubClient _githubClient;
+
+        public UpdaterService(IGithubClient githubClient)
+        {
+            _githubClient = githubClient;
+        }
+        
         public async Task Update(string accessToken)
         {
-            await Task.CompletedTask;
-
-            var directory = await GithubClient.Github.getRepo("AndersJuul", "NYourCodeAsCrimeScene", accessToken);
+            var directory = await _githubClient.GetRootDirectory("AndersJuul", "NYourCodeAsCrimeScene", accessToken, new []{"cs"});
             NewMethod(directory);
-            
-            
         }
 
         private static void NewMethod(Directory directory)
