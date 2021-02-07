@@ -15,7 +15,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
     public class DefaultInfrastructureModule : Module
     {
         private bool _isDevelopment = false;
-        private List<Assembly> _assemblies = new List<Assembly>();
+        private readonly List<Assembly> _assemblies = new List<Assembly>();
 
         public DefaultInfrastructureModule(bool isDevelopment, Assembly callingAssembly =  null)
         {
@@ -59,7 +59,12 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 .RegisterType<UpdaterService>()
                 .As<IUpdaterService>()
                 .InstancePerLifetimeScope();
-            
+
+            builder
+                .RegisterType<GitClient>()
+                .As<IGitClient>()
+                .InstancePerLifetimeScope();
+
             builder.Register<ServiceFactory>(context =>
             {
                 var c = context.Resolve<IComponentContext>();

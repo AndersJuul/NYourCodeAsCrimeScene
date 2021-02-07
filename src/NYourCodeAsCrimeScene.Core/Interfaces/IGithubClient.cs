@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using NYourCodeAsCrimeScene.Core.Services;
 
-namespace NYourCodeAsCrimeScene.Core.Services
+namespace NYourCodeAsCrimeScene.Core.Interfaces
 {
     public interface IGithubClient
     {
-        Task<Directory> GetRootDirectory(string owner, string name, string access_token, string[] fileExt);
+        Task<GitDirectory> GetRootDirectory(string owner, string name, string access_token, string[] fileExt);
     }
 }

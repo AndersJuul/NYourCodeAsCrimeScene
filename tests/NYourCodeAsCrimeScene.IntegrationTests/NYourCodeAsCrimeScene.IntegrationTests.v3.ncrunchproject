@@ -3,6 +3,7 @@
     <HiddenComponentWarnings>
       <Value>CopyReferencedAssembliesToWorkspaceIsOn</Value>
       <Value>AspNetTestHostCompatibility</Value>
+      <Value>LongTestTimesWithoutParallelExecution</Value>
     </HiddenComponentWarnings>
   </Settings>
 </ProjectConfiguration>

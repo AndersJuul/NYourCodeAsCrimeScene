@@ -4,5 +4,16 @@
       <Value>CopyReferencedAssembliesToWorkspaceIsOn</Value>
       <Value>AspNetTestHostCompatibility</Value>
     </HiddenComponentWarnings>
+    <IgnoredTests>
+      <NamedTestSelector>
+        <TestName>NYourCodeAsCrimeScene.FunctionalTests.HomeControllerIndex.ReturnsViewWithCorrectMessage</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>NYourCodeAsCrimeScene.FunctionalTests.Api.ApiToDoItemsControllerList.ReturnsTwoItems</TestName>
+      </NamedTestSelector>
+      <NamedTestSelector>
+        <TestName>NYourCodeAsCrimeScene.FunctionalTests.Api.MetaControllerInfo.ReturnsVersionAndLastUpdateDate</TestName>
+      </NamedTestSelector>
+    </IgnoredTests>
   </Settings>
 </ProjectConfiguration>

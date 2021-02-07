@@ -5,13 +5,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using NYourCodeAsCrimeScene.Core.Interfaces;
+using NYourCodeAsCrimeScene.Core.Services;
 
-namespace NYourCodeAsCrimeScene.Core.Services
+namespace NYourCodeAsCrimeScene.Infrastructure
 {
     public class GithubClient : IGithubClient
     {
         //Get all files from a repo
-        public async Task<Directory> GetRootDirectory(string owner, string name, string accessToken, string[] fileExt)
+        public async Task<GitDirectory> GetRootDirectory(string owner, string name, string accessToken, string[] fileExt)
         {
             try
             {
@@ -28,7 +30,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
         }
 
         //recursively get the contents of all files and subdirectories within a directory 
-        private static async Task<Directory> ReadDirectory(string name, HttpClient client, string uri,
+        private static async Task<GitDirectory> ReadDirectory(string name, HttpClient client, string uri,
             string accessToken, string[] fileExt)
         {
             Console.WriteLine("--Reading dir: " + uri);
@@ -47,10 +49,10 @@ namespace NYourCodeAsCrimeScene.Core.Services
             var dirContents = JsonConvert.DeserializeObject<FileInfo[]>(jsonStr);
 
             //read in data
-            Directory result;
+            GitDirectory result;
             result.name = name;
-            result.subDirs = new List<Directory>();
-            result.files = new List<FileData>();
+            result.subDirs = new List<GitDirectory>();
+            result.files = new List<GitFileData>();
             foreach (var file in dirContents)
             {
                 Console.WriteLine("  -- Reading file: " + file.name);
@@ -73,7 +75,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
                         var content = await contentResponse.Content.ReadAsStringAsync();
                         contentResponse.Dispose();
 
-                        FileData data;
+                        GitFileData data;
                         data.name = file.name;
                         data.contents = content;
 

@@ -20,7 +20,8 @@ namespace NYourCodeAsCrimeScene.Web.HostedServices
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _updaterService.Update(_options.ApiKey);
+            await _updaterService.Update(projectName:"NYourCodeAsCrimeScene",
+                projectPath: @"C:\Projects\NYourCodeAsCrimeScene");
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

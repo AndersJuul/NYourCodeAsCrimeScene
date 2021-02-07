@@ -1,11 +1,11 @@
 ﻿using System;
 using Autofac.Extensions.DependencyInjection;
-using NYourCodeAsCrimeScene.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NYourCodeAsCrimeScene.Infrastructure.Data;
 
 namespace NYourCodeAsCrimeScene.Web
 {
@@ -36,20 +36,20 @@ namespace NYourCodeAsCrimeScene.Web
             host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-        .ConfigureWebHostDefaults(webBuilder =>
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            webBuilder
-                .UseStartup<Startup>()
-                .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.AddConsole();
-                // logging.AddAzureWebAppDiagnostics(); add this if deploying to Azure
-            });
-        });
-
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseStartup<Startup>()
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.ClearProviders();
+                            logging.AddConsole();
+                        });
+                });
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NYourCodeAsCrimeScene.Core.Services
+namespace NYourCodeAsCrimeScene.Infrastructure
 {
     struct FileInfo
     {
