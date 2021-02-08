@@ -1,16 +1,14 @@
-﻿using MediatR;
-using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NYourCodeAsCrimeScene.Core.Interfaces;
-using NYourCodeAsCrimeScene.Infrastructure;
 
 namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
 {
-    public abstract class BaseGitClientTestFixture
+    public abstract class BaseGitClientTestFixture : IntegrationTestBaseWithIoc
     {
         protected IGitClient GetGitClient()
         {
-            var mockMediator = new Mock<IMediator>();
-            return new GitClient(mockMediator.Object);
+            var serviceProvider = CreateServiceProvider();
+            return serviceProvider.GetRequiredService<IGitClient>();
         }
     }
 }
