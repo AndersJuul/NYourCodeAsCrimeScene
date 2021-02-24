@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using NYourCodeAsCrimeScene.SharedKernel;
 using NYourCodeAsCrimeScene.SharedKernel.Interfaces;
 
@@ -16,22 +17,28 @@ namespace NYourCodeAsCrimeScene.Core.Entities
 
         private Project()
         {
-            Commits = new List<Commit>();
+            Commits = new List<GitCommit>();
         }
 
         public string Name { get; set; }
         public string Path { get; set; }
         
-        public List<Commit> Commits { get; set; }
+        public List<GitCommit> Commits { get; set; }
 
         public bool HasCommit(string commitId)
         {
             return Commits.Any(x => x.CommitId == commitId);
         }
 
-        public void AddCommit(Commit commit)
+        public void AddCommit(GitCommit gitCommit)
         {
-            Commits.Add(commit);
+            Commits.Add(gitCommit);
+        }
+
+        [CanBeNull]
+        public GitCommit CommitById(string commitId)
+        {
+            return Commits.SingleOrDefault(x => x.CommitId == commitId);
         }
     }
 }

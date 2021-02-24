@@ -8,13 +8,13 @@ using NYourCodeAsCrimeScene.Core.Services;
 
 namespace NYourCodeAsCrimeScene.Infrastructure
 {
-    public class CommitQueryHandler : IRequestHandler<CommitQuery, IEnumerable<CommitDto>>
+    public class GitFileQueryHandler : IRequestHandler<GitFileQuery, IEnumerable<FileDto>>
     {
-        public async Task<IEnumerable<CommitDto>> Handle(CommitQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FileDto>> Handle(GitFileQuery request, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
-            var result = new List<CommitDto>();
+            var result = new List<FileDto>();
             
             var output = request.Output;
 
@@ -25,28 +25,28 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 if (!output.Any())
                     break;
 
-                var commit = output.First().Split(" ")[1];
+                var commit = output.First();
                 output = output.Skip(1).ToArray();
                 var author = output.First().Substring("Author: ".Length);
                 output = output.Skip(1).ToArray();
                 var date = output.First().Substring("Date : ".Length);
 
-                result.Add(new CommitDto
+                result.Add(new FileDto
                 {
-                    CommitId = commit,
-                    Date = Convert.ToDateTime(date.Trim()),
-                    Author = author
+                    //CommitId = commit,
+                    //Date = Convert.ToDateTime(date.Trim()),
+                    //Author = author
                 });
             }
 
             return result;
         }
     }
-    public class CommitQuery : IRequest<IEnumerable<CommitDto>>
+    public class GitFileQuery : IRequest<IEnumerable<FileDto>>
     {
         public string[] Output { get; }
 
-        public CommitQuery(string[] output)
+        public GitFileQuery(string[] output)
         {
             Output = output;
         }

@@ -23,7 +23,7 @@ namespace NYourCodeAsCrimeScene.UnitTests
 
         public Project Build() => _project;
 
-        public ProjectBuilder WithCommit(Commit commit)
+        public ProjectBuilder WithCommit(GitCommit gitCommit)
         {
             var commits = _project.Commits;
             _project = new Project(_project.Name, _project.Path);
@@ -33,7 +33,7 @@ namespace NYourCodeAsCrimeScene.UnitTests
                 _project.AddCommit(c);
             }
             
-            _project.AddCommit(commit);
+            _project.AddCommit(gitCommit);
             return this;
         }
     }

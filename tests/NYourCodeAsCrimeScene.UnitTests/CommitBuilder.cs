@@ -7,21 +7,21 @@ namespace NYourCodeAsCrimeScene.UnitTests
     // https://ardalis.com/improve-tests-with-the-builder-pattern-for-test-data
     public class CommitBuilder
     {
-        private Commit _commit = null;
+        private GitCommit _gitCommit = null;
 
         public CommitBuilder Id(int id)
         {
-            _commit.Id = id;
+            _gitCommit.Id = id;
             return this;
         }
 
         public CommitBuilder WithDefaultValues()
         {
-            _commit = new Commit( "CommitId-1", DateTime.Now );
+            _gitCommit = new GitCommit( "CommitId-1", DateTime.Now );
 
             return this;
         }
 
-        public Commit Build() => _commit;
+        public GitCommit Build() => _gitCommit;
     }
 }

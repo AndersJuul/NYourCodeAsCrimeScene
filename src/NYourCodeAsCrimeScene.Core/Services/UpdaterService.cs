@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using NYourCodeAsCrimeScene.Core.Entities;
 using NYourCodeAsCrimeScene.Core.Interfaces;
 using NYourCodeAsCrimeScene.Core.Specifications;
+using NYourCodeAsCrimeScene.SharedKernel;
 using NYourCodeAsCrimeScene.SharedKernel.Interfaces;
 
 namespace NYourCodeAsCrimeScene.Core.Services
@@ -29,7 +31,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
             try
             {
                 var projects = await _repository.ListAsync(new ProjectByNameSpec(projectName));
-                var project= projects.SingleOrDefault();
+                var project = projects.SingleOrDefault();
                 if (project==null)
                 {
                     project = new Project(projectName, projectPath);
@@ -41,12 +43,26 @@ namespace NYourCodeAsCrimeScene.Core.Services
 
                 foreach (var commitDto in commits)
                 {
-                    if (!project.HasCommit(commitDto.CommitId))
+                    var commit = project.CommitById(commitDto.CommitId);
+                    if (commit==null)
                     {
-                        project.AddCommit(new Commit( commitDto.CommitId, commitDto.Date));
+                        commit = new GitCommit( commitDto.CommitId, commitDto.Date);
+                        project.AddCommit(commit);
+                    }
+
+                    if (!commit.GitFiles.Any())
+                    {
+                        var fileDtos = await _gitClient
+                            .GetFiles(projectPath, commit.CommitId);
+                        foreach (var fileDto in fileDtos)
+                        {
+                            commit.AddFile(new GitFile(fileDto.Name));
+                        }
                     }
                 }
 
+                _logger.LogInformation("Project: " + JsonConvert.SerializeObject( new Analyzer(project).GetTop(5),Formatting.Indented));
+                
                 await _unitOfWork.CommitChanges();
             }
             catch (Exception e)
@@ -55,5 +71,24 @@ namespace NYourCodeAsCrimeScene.Core.Services
                 throw;
             }
         }
+    }
+
+    public class Analyzer
+    {
+        private Project _project;
+
+        public Analyzer(Project project)
+        {
+            _project = project;
+        }
+
+        public CodeIssue[] GetTop(int count)
+        {
+            return new[] {new CodeIssue()};
+        }
+    }
+
+    public class CodeIssue:ValueObject
+    {
     }
 }
