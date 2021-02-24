@@ -8,11 +8,16 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NYourCodeAsCrimeScene.Infrastructure.Data;
 using NYourCodeAsCrimeScene.Web;
+using Xunit.Abstractions;
 
 namespace NYourCodeAsCrimeScene.IntegrationTests
 {
-    public class IntegrationTestBaseWithIoc
+    public abstract class IntegrationTestBaseWithIoc : BaseTest
     {
+        protected IntegrationTestBaseWithIoc(ITestOutputHelper output) : base(output)
+        {
+        }
+
         protected IServiceProvider CreateServiceProvider()
         {
             var host = Host.CreateDefaultBuilder(new string[] { })

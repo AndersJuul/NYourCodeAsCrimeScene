@@ -1,23 +1,54 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.Specification;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using NYourCodeAsCrimeScene.Core.Entities;
 using NYourCodeAsCrimeScene.Core.Interfaces;
+using NYourCodeAsCrimeScene.Core.Specifications;
+using NYourCodeAsCrimeScene.SharedKernel.Interfaces;
 
 namespace NYourCodeAsCrimeScene.Core.Services
 {
     public class UpdaterService : IUpdaterService
     {
         private readonly IGitClient _gitClient;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<UpdaterService> _logger;
+        private readonly IRepository _repository;
 
-        public UpdaterService(IGitClient gitClient)
+        public UpdaterService(IGitClient gitClient, IUnitOfWork unitOfWork, ILogger<UpdaterService> logger, IRepository repository)
         {
             _gitClient = gitClient;
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _repository = repository;
         }
         
         public async Task Update(string projectName, string projectPath)
         {
-            var commits = await _gitClient
-                .GetCommits(projectName, projectPath, new []{"cs"});
+            try
+            {
+                var projects = await _repository.ListAsync(new ProjectByNameSpec(projectName));
+                var project= projects.SingleOrDefault();
+                if (project==null)
+                {
+                    project = new Project();
+                    await _repository.AddAsync(project);
+                }
+
+                var commits = await _gitClient
+                    .GetCommits(projectName, projectPath, new[] { "cs" });
+
+
+                await _unitOfWork.CommitChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "During Update");
+                throw;
+            }
         }
     }
 }

@@ -1,36 +1,32 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NYourCodeAsCrimeScene.Infrastructure.Data;
-using NYourCodeAsCrimeScene.Web;
+using Newtonsoft.Json;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
 {
     public class GitClientGetCommits : BaseGitClientTestFixture
     {
+        public GitClientGetCommits(ITestOutputHelper output) : base(output)
+        {
+        }
+
         [Fact]
         public async Task ReturnsExpectedNumberOfCommits()
         {
             var gitClient = GetGitClient();
 
             var commitDtos = await gitClient.GetCommits(
-                projectName: "NYourCodeAsCrimeScene",
-                projectPath: @"C:\Projects\NYourCodeAsCrimeScene", 
+                "NYourCodeAsCrimeScene",
+                @"C:\Projects\NYourCodeAsCrimeScene",
                 new[] {""});
-            Assert.Equal(3, commitDtos.Count());
+            
+            Output.WriteLine(JsonConvert.SerializeObject(commitDtos.OrderBy(x=>x.Date), Formatting.Indented));
+            
+            Assert.Equal(7, commitDtos.Count(x=>x.Date<new DateTime(2021,2,8)));
         }
 
-        [Fact]
-        public async Task Aa()
-        {
-        }
     }
 }

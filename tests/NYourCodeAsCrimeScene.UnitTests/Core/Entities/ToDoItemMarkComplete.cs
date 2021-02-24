@@ -1,33 +1,33 @@
-﻿using System.Linq;
-using NYourCodeAsCrimeScene.Core.Events;
-using Xunit;
+﻿//using System.Linq;
+//using NYourCodeAsCrimeScene.Core.Events;
+//using Xunit;
 
-namespace NYourCodeAsCrimeScene.UnitTests.Core.Entities
-{
-    public class ToDoItemMarkComplete
-    {
-        [Fact]
-        public void SetsIsDoneToTrue()
-        {
-            var item = new ToDoItemBuilder()
-                .WithDefaultValues()
-                .Description("")
-                .Build();
+//namespace NYourCodeAsCrimeScene.UnitTests.Core.Entities
+//{
+//    public class ToDoItemMarkComplete
+//    {
+//        [Fact]
+//        public void SetsIsDoneToTrue()
+//        {
+//            var item = new ToDoItemBuilder()
+//                .WithDefaultValues()
+//                .Description("")
+//                .Build();
 
-            item.MarkComplete();
+//            item.MarkComplete();
 
-            Assert.True(item.IsDone);
-        }
+//            Assert.True(item.IsDone);
+//        }
 
-        [Fact]
-        public void RaisesToDoItemCompletedEvent()
-        {
-            var item = new ToDoItemBuilder().Build();
+//        [Fact]
+//        public void RaisesToDoItemCompletedEvent()
+//        {
+//            var item = new ToDoItemBuilder().Build();
 
-            item.MarkComplete();
+//            item.MarkComplete();
 
-            Assert.Single(item.Events);
-            Assert.IsType<ToDoItemCompletedEvent>(item.Events.First());
-        }
-    }
-}
+//            Assert.Single(item.Events);
+//            Assert.IsType<ToDoItemCompletedEvent>(item.Events.First());
+//        }
+//    }
+//}

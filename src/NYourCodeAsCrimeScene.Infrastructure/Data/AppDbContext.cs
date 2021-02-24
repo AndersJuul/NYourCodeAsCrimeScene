@@ -13,26 +13,19 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Data
     {
         private readonly IMediator _mediator;
 
-        //public AppDbContext(DbContextOptions options) : base(options)
-        //{
-        //}
-
         public AppDbContext(DbContextOptions<AppDbContext> options, IMediator mediator)
             : base(options)
         {
             _mediator = mediator;
         }
 
-        public DbSet<ToDoItem> ToDoItems { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyAllConfigurationsFromCurrentAssembly();
-
-            // alternately this is built-in to EF Core 2.2
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

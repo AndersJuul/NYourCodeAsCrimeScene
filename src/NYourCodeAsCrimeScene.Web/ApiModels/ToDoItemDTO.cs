@@ -1,26 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using NYourCodeAsCrimeScene.Core.Entities;
+﻿//using System.ComponentModel.DataAnnotations;
+//using NYourCodeAsCrimeScene.Core.Entities;
 
-namespace NYourCodeAsCrimeScene.Web.ApiModels
-{
-    // Note: doesn't expose events or behavior
-    public class ToDoItemDTO
-    {
-        public int Id { get; set; }
-        [Required]
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public bool IsDone { get; private set; }
+//namespace NYourCodeAsCrimeScene.Web.ApiModels
+//{
+//    // Note: doesn't expose events or behavior
+//    public class ToDoItemDTO
+//    {
+//        public int Id { get; set; }
+//        [Required]
+//        public string Title { get; set; }
+//        public string Description { get; set; }
+//        public bool IsDone { get; private set; }
 
-        public static ToDoItemDTO FromToDoItem(ToDoItem item)
-        {
-            return new ToDoItemDTO()
-            {
-                Id = item.Id,
-                Title = item.Title,
-                Description = item.Description,
-                IsDone = item.IsDone
-            };
-        }
-    }
-}
+//        public static ToDoItemDTO FromToDoItem(ToDoItem item)
+//        {
+//            return new ToDoItemDTO()
+//            {
+//                Id = item.Id,
+//                Title = item.Title,
+//                Description = item.Description,
+//                IsDone = item.IsDone
+//            };
+//        }
+//    }
+//}

@@ -4,12 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace NYourCodeAsCrimeScene.Infrastructure.Data.Config
 {
-    public class ToDoConfiguration : IEntityTypeConfiguration<ToDoItem>
+    public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
-        public void Configure(EntityTypeBuilder<ToDoItem> builder)
+        public void Configure(EntityTypeBuilder<Project> builder)
         {
-            builder.Property(t => t.Title)
+            builder
+                .Property(t => t.Name)
                 .IsRequired();
+            builder
+                .HasIndex(x=>x.Name)
+                .IsUnique();
         }
     }
 }
