@@ -26,13 +26,16 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                     break;
 
                 var commit = output.First();
-                output = output.Skip(2).ToArray();
+                output = output.Skip(1).ToArray();
+                var author = output.First().Substring("Author: ".Length);
+                output = output.Skip(1).ToArray();
                 var date = output.First().Substring("Date : ".Length);
 
                 result.Add(new CommitDto
                 {
                     CommitId = commit,
-                    Date = Convert.ToDateTime(date.Trim())
+                    Date = Convert.ToDateTime(date.Trim()),
+                    Author = author
                 });
             }
 

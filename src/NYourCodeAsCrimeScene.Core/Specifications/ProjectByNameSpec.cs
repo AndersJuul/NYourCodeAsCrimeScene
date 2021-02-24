@@ -7,7 +7,9 @@ namespace NYourCodeAsCrimeScene.Core.Specifications
     {
         public ProjectByNameSpec(string projectName)
         {
-            Query.Where(item => item.Name==projectName);
+            Query
+                .Where(item => item.Name == projectName)
+                .Include(x => x.Commits);
         }
     }
 }

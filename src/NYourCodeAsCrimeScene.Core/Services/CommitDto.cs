@@ -6,5 +6,6 @@ namespace NYourCodeAsCrimeScene.Core.Services
     {
         public string CommitId { get; set; }
         public DateTime Date { get; set; }
+        public string Author { get; set; }
     }
 }

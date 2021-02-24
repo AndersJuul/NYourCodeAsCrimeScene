@@ -39,6 +39,13 @@ namespace NYourCodeAsCrimeScene.Core.Services
                 var commits = await _gitClient
                     .GetCommits(projectName, projectPath, new[] { "cs" });
 
+                foreach (var commitDto in commits)
+                {
+                    if (!project.HasCommit(commitDto.CommitId))
+                    {
+                        project.AddCommit(new Commit( commitDto.CommitId, commitDto.Date));
+                    }
+                }
 
                 await _unitOfWork.CommitChanges();
             }

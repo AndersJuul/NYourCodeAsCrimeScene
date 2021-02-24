@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NYourCodeAsCrimeScene.Infrastructure.Data;
@@ -8,9 +7,9 @@ using Xunit.Abstractions;
 
 namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
 {
-    public class UpdaterServiceGetCommits : BaseUpdaterServiceTestFixture
+    public class UpdaterServiceUpdate : BaseUpdaterServiceTestFixture
     {
-        public UpdaterServiceGetCommits(ITestOutputHelper output) : base(output)
+        public UpdaterServiceUpdate(ITestOutputHelper output) : base(output)
         {
         }
 
@@ -22,11 +21,8 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
             await gitClient.Update(
                 "NYourCodeAsCrimeScene",
                 @"C:\Projects\NYourCodeAsCrimeScene");
-            
-            //Output.WriteLine(JsonConvert.SerializeObject(commitDtos.OrderBy(x=>x.Date), Formatting.Indented));
-            
-            Assert.Equal(1, base.CreateServiceProvider().GetRequiredService<AppDbContext>().Projects.Count());
-        }
 
+            Assert.Equal(1, CreateServiceProvider().GetRequiredService<AppDbContext>().Projects.Count());
+        }
     }
 }

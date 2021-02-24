@@ -6,7 +6,7 @@ using Xunit;
 
 namespace NYourCodeAsCrimeScene.UnitTests.Infrastructure
 {
-    public class CommitQueryHandler_MapsToCommitDtos
+    public class CommitQueryHandlerMapsToCommitDtos
     {
         [Fact]
         public async Task ReturnsCommitDtosFromStringArray()
@@ -50,7 +50,6 @@ Date:   2021-02-07 11:42:33 +0100
     Initial commit
 ".Split("\r\n");
 
-            
             var result = await sut.Handle(new CommitQuery(strings), CancellationToken.None);
 
             Assert.Equal(6, result.Count());
