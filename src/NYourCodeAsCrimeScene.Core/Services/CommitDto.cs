@@ -8,9 +8,4 @@ namespace NYourCodeAsCrimeScene.Core.Services
         public DateTime Date { get; set; }
         public string Author { get; set; }
     }
-
-    public class FileDto
-    {
-        public string Name { get; set; }
-    }
 }

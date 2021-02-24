@@ -24,7 +24,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
         public async Task<IEnumerable<CommitDto>> GetCommits(string projectName, string projectPath, string[] fileExt)
         {
             _logger.LogInformation("Getting commits from " + projectPath);
-            var output = await Gaet(projectPath, "log --date=iso");
+            var output = await GetResultOfexecutingGit(projectPath, "log --date=iso");
 
             var result = await _mediator.Send(new CommitQuery(output.Split("\n")));
 
@@ -34,14 +34,14 @@ namespace NYourCodeAsCrimeScene.Infrastructure
         public async Task<IEnumerable<FileDto>> GetFiles(string projectPath, string commitId)
         {
             _logger.LogInformation("Getting files from commit: " + commitId);
-            var output = await Gaet(projectPath, "diff-tree --root --no-commit-id --name-only -r "+commitId);
+            var output = await GetResultOfexecutingGit(projectPath, "diff-tree --root --no-commit-id --name-only -r "+commitId);
 
             var result = await _mediator.Send(new GitFileQuery(output.Split("\n")));
 
             return result;
         }
 
-        private static async Task<string> Gaet(string projectPath, string arguments)
+        private static async Task<string> GetResultOfexecutingGit(string projectPath, string arguments)
         {
             var process = new Process
             {

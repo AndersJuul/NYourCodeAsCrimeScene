@@ -16,27 +16,11 @@ namespace NYourCodeAsCrimeScene.Infrastructure
 
             var result = new List<FileDto>();
             
-            var output = request.Output;
+            var output = request.Output.Where(x=> !string.IsNullOrEmpty(x));
 
-            while (output.Any())
+            foreach (var fileName in output)
             {
-                while (output.Any() && !(output.FirstOrDefault()?.StartsWith("commit") ?? false))
-                    output = output.Skip(1).ToArray();
-                if (!output.Any())
-                    break;
-
-                var commit = output.First();
-                output = output.Skip(1).ToArray();
-                var author = output.First().Substring("Author: ".Length);
-                output = output.Skip(1).ToArray();
-                var date = output.First().Substring("Date : ".Length);
-
-                result.Add(new FileDto
-                {
-                    //CommitId = commit,
-                    //Date = Convert.ToDateTime(date.Trim()),
-                    //Author = author
-                });
+                result.Add(new FileDto{Name = fileName});
             }
 
             return result;

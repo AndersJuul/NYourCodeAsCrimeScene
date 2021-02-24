@@ -1,4 +1,5 @@
-﻿using NYourCodeAsCrimeScene.SharedKernel;
+﻿using System;
+using NYourCodeAsCrimeScene.SharedKernel;
 
 namespace NYourCodeAsCrimeScene.Core.Entities
 {
@@ -8,6 +9,8 @@ namespace NYourCodeAsCrimeScene.Core.Entities
 
         public GitFile(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentException("Name can't be empty or null.");
             Name = name;
         }
 
