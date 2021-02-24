@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NYourCodeAsCrimeScene.Infrastructure.Data;
 using NYourCodeAsCrimeScene.Web;
 
@@ -13,35 +15,40 @@ namespace NYourCodeAsCrimeScene.IntegrationTests
     {
         protected IServiceProvider CreateServiceProvider()
         {
-            // Get service provider.
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("testsettings.json")
-                .Build();
-            var serviceCollection = new ServiceCollection();
-            new Startup(configuration, null).ConfigureServices(serviceCollection);
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var host = Host.CreateDefaultBuilder(new string[] { })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .ConfigureAppConfiguration((hosting, config) =>
+                        {
+                            config.AddEnvironmentVariables();
+                            config.AddJsonFile("testsettings.json");
+                        })
+                        .UseStartup<Startup>()
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.ClearProviders();
+                            logging.AddConsole();
+                        });
+                }).Build();
 
-            // Create a scope to obtain a reference to the database
-            // context (AppDbContext).
-            using (var scope = serviceProvider.CreateScope())
+            var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+
+            try
             {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<AppDbContext>();
-
-                // Ensure the database is created.
-                db.Database.Migrate();
-
-                try
-                {
-                    // Seed the database with test data.
-                    SeedData.PopulateTestData(db);
-                }
-                catch (Exception ex)
-                {
-                }
+                var context = services.GetRequiredService<AppDbContext>();
+                context.Database.Migrate();
+                SeedData.Initialize(services);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred seeding the DB.");
             }
 
-            return serviceProvider;
+            return services;
         }
     }
 }

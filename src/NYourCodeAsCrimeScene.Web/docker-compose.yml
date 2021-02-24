@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  sqlserver:
+    image: microsoft/mssql-server-linux:2017-GA            
+    container_name: sqlserver
+    ports:
+      - "1434:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+      - SA_PASSWORD=Passw0rd
+  nats-streaming:
+    image: nats-streaming:0.11.0-linux
+    command: -m 8222 --store MEMORY --cluster_id egis-cluster -DV
+    ports:
+     - "4222:4222"
+     - "8222:8222"
+    volumes:
+     - "C:/TEMP/NatsData:/usr/share/nats/data"
+  nats:
+    image: nats:2.1.2-linux
+    ports:
+     - "4223:4222"
+     - "8223:8222"
+  # Elasticsearch Docker Images: https://www.docker.elastic.co/
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elasticsearch-data:
+    driver: local

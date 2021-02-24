@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ardalis.ListStartupServices;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using NYourCodeAsCrimeScene.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,6 +60,8 @@ namespace NYourCodeAsCrimeScene.Web
 
 			services.AddOptions();
             services.Configure<GithubConnectionOptions>(Configuration.GetSection("GithubConnection"));
+            
+            
 		}
 
 		public void ConfigureContainer(ContainerBuilder builder)
