@@ -9,19 +9,6 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Developer
       - SA_PASSWORD=Passw0rd
-  nats-streaming:
-    image: nats-streaming:0.11.0-linux
-    command: -m 8222 --store MEMORY --cluster_id egis-cluster -DV
-    ports:
-     - "4222:4222"
-     - "8222:8222"
-    volumes:
-     - "C:/TEMP/NatsData:/usr/share/nats/data"
-  nats:
-    image: nats:2.1.2-linux
-    ports:
-     - "4223:4222"
-     - "8223:8222"
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0

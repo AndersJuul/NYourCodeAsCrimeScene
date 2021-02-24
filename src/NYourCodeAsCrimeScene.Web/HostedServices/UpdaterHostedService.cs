@@ -1,33 +1,48 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using NYourCodeAsCrimeScene.Core.Interfaces;
-using NYourCodeAsCrimeScene.Web.Options;
 
 namespace NYourCodeAsCrimeScene.Web.HostedServices
 {
     public class UpdaterHostedService: IHostedService, IDisposable
     {
-        private readonly IUpdaterService _updaterService;
-        private readonly GithubConnectionOptions _options;
+        private readonly ILogger<UpdaterHostedService> _logger;
+        private readonly IServiceProvider _serviceProvider;
+        private Timer _timer;
 
-        public UpdaterHostedService(IUpdaterService updaterService, IOptions<GithubConnectionOptions> options)
+        public UpdaterHostedService(ILogger<UpdaterHostedService> logger, IServiceProvider serviceProvider)
         {
-            _updaterService = updaterService;
-            _options = options.Value;
+            _logger = logger;
+            _serviceProvider = serviceProvider;
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _updaterService.Update(projectName:"NYourCodeAsCrimeScene",
+            _timer = new Timer(DoWork, null, TimeSpan.Zero,
+                TimeSpan.FromSeconds(5));
+        }
+
+        private async void DoWork(object state)
+        {
+            _logger.LogInformation("Timed Hosted Service is working. Count.");
+
+            var serviceScope = _serviceProvider.CreateScope();
+            var updaterService = serviceScope.ServiceProvider.GetRequiredService<IUpdaterService>();
+            await updaterService.Update(projectName: "NYourCodeAsCrimeScene",
                 projectPath: @"C:\Projects\NYourCodeAsCrimeScene");
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            //throw new NotImplementedException();
-            await Task.CompletedTask;
+            _logger.LogInformation("Timed Hosted Service is stopping.");
+
+            _timer?.Change(Timeout.Infinite, 0);
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()

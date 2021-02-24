@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Ardalis.Specification;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using NYourCodeAsCrimeScene.Core.Entities;
 using NYourCodeAsCrimeScene.Core.Interfaces;
@@ -34,7 +32,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
                 var project= projects.SingleOrDefault();
                 if (project==null)
                 {
-                    project = new Project();
+                    project = new Project(projectName, projectPath);
                     await _repository.AddAsync(project);
                 }
 

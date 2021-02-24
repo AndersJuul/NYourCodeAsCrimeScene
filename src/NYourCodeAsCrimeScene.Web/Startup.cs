@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using NYourCodeAsCrimeScene.Core.Interfaces;
+using NYourCodeAsCrimeScene.Infrastructure.Data;
 using NYourCodeAsCrimeScene.Web.HostedServices;
 using NYourCodeAsCrimeScene.Web.Options;
 
@@ -34,10 +36,10 @@ namespace NYourCodeAsCrimeScene.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			string connectionString = Configuration.GetConnectionString("ConnectionString");  
-
+			var connectionString = Configuration.GetConnectionString("ConnectionString");  
 
 			services.AddDbContext(connectionString);
+            services.AddScoped<IUnitOfWork>(c => new UnitOfWork(c.GetRequiredService<AppDbContext>()));
 
 			services.AddControllersWithViews().AddNewtonsoftJson();
 			services.AddRazorPages();
@@ -60,9 +62,7 @@ namespace NYourCodeAsCrimeScene.Web
 
 			services.AddOptions();
             services.Configure<GithubConnectionOptions>(Configuration.GetSection("GithubConnection"));
-            
-            
-		}
+        }
 
 		public void ConfigureContainer(ContainerBuilder builder)
 		{
