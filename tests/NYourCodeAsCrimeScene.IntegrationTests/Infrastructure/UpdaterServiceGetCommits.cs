@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Microsoft.Extensions.DependencyInjection;
+using NYourCodeAsCrimeScene.Infrastructure.Data;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,7 +15,7 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
         }
 
         [Fact]
-        public async Task ReturnsExpectedNumberOfCommits()
+        public async Task CreatesExpectedNumberOfProjects()
         {
             var gitClient = GetUpdaterService();
 
@@ -24,7 +25,7 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
             
             //Output.WriteLine(JsonConvert.SerializeObject(commitDtos.OrderBy(x=>x.Date), Formatting.Indented));
             
-            //Assert.Equal(7, commitDtos.Count(x=>x.Date<new DateTime(2021,2,8)));
+            Assert.Equal(1, base.CreateServiceProvider().GetRequiredService<AppDbContext>().Projects.Count());
         }
 
     }

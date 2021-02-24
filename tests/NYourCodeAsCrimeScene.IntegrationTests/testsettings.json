@@ -8,9 +8,11 @@
   "Logging": {
     "IncludeScopes": false,
     "LogLevel": {
-      "Default": "Debug",
+      "Default": "Information",
       "System": "Information",
-      "Microsoft": "Information"
+      "Microsoft": "Information",
+      "Microsoft.EntityFrameworkCore.Database": "Warning",
+      "Microsoft.EntityFrameworkCore.Infrastructure": "Warning"
     }
   }
 }
