@@ -21,6 +21,8 @@ namespace NYourCodeAsCrimeScene.Web.HostedServices
         }
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            await Task.CompletedTask;
+            
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
                 TimeSpan.FromSeconds(5));
         }

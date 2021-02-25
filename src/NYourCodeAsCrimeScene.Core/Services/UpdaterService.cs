@@ -46,8 +46,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
                     var commit = project.CommitById(commitDto.CommitId);
                     if (commit==null)
                     {
-                        commit = new GitCommit( commitDto.CommitId, commitDto.Date);
-                        project.AddCommit(commit);
+                        commit = new GitCommit( commitDto.CommitId, commitDto.Date, project);
                     }
 
                     if (!commit.GitFiles.Any())
@@ -59,11 +58,12 @@ namespace NYourCodeAsCrimeScene.Core.Services
                             try
                             {
                                 var fileContent = await _gitClient.GetFileContent(projectPath, commit.CommitId, fileDto.Name);
-                                commit.AddFile(new GitFile(fileDto.Name, fileContent.Count()));
+                                var gitFile = new GitFile(fileDto.Name, fileContent.Count());
+                                project.AddFileEntry(commit,gitFile, fileContent.Count());
                             }
                             catch (Exception e)
                             {
-                                _logger.LogWarning("Exception during file content retrieval. File not added to commit: "+fileDto.Name);
+                                _logger.LogError(e,"Exception during file content retrieval. File not added to commit: "+fileDto.Name);
                             }
                         }
                     }
