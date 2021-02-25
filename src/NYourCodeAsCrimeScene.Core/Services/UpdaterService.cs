@@ -56,7 +56,15 @@ namespace NYourCodeAsCrimeScene.Core.Services
                             .GetFiles(projectPath, commit.CommitId);
                         foreach (var fileDto in fileDtos)
                         {
-                            commit.AddFile(new GitFile(fileDto.Name));
+                            try
+                            {
+                                var fileContent = await _gitClient.GetFileContent(projectPath, commit.CommitId, fileDto.Name);
+                                commit.AddFile(new GitFile(fileDto.Name, fileContent.Count()));
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogWarning("Exception during file content retrieval. File not added to commit: "+fileDto.Name);
+                            }
                         }
                     }
                 }

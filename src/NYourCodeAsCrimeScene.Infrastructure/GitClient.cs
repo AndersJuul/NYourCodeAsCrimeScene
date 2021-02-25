@@ -41,8 +41,19 @@ namespace NYourCodeAsCrimeScene.Infrastructure
             return result;
         }
 
-        private static async Task<string> GetResultOfexecutingGit(string projectPath, string arguments)
+        public async Task<IEnumerable<string>> GetFileContent(string projectPath, string commitId, string fileDtoName)
         {
+            _logger.LogInformation("Getting contents of file: "  );
+            var output = await GetResultOfexecutingGit(projectPath, $"show {commitId}:{fileDtoName}" );
+
+            var result = output.Split(Environment.NewLine);
+
+            return result;
+        }
+
+        private async Task<string> GetResultOfexecutingGit(string projectPath, string arguments)
+        {
+            _logger.LogInformation($"Executing: {gitPath} {arguments}" );
             var process = new Process
             {
                 StartInfo =

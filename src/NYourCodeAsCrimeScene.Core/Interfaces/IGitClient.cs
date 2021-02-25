@@ -9,5 +9,6 @@ namespace NYourCodeAsCrimeScene.Core.Interfaces
     {
         Task<IEnumerable<CommitDto>> GetCommits(string projectName, string projectPath, string[] fileExt);
        Task<IEnumerable<FileDto>> GetFiles(string projectPath, string commitId);
+       Task<IEnumerable<string>> GetFileContent(string projectPath, string commitId, string fileDtoName);
     }
 }
