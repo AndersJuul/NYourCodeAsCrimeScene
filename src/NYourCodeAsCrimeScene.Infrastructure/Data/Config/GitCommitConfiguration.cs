@@ -8,10 +8,10 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Data.Config
     {
         public void Configure(EntityTypeBuilder<GitCommit> builder)
         {
-            builder
-                .Property(t => t.Project)
-                .IsRequired()
-                .HasColumnName("ProjectId");
+            //builder
+            //    .Property(t => t.Project)
+            //    .IsRequired()
+            //    .HasColumnName("ProjectId");
         }
     }
 }

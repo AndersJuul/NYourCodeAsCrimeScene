@@ -14,6 +14,11 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Data.Config
             builder
                 .HasIndex(x=>x.Name)
                 .IsUnique();
+            builder
+                .HasMany(x => x.Commits)
+                .WithOne(x => x.Project)
+                .HasForeignKey(x=>x.ProjectId)
+                .IsRequired();
         }
     }
 }

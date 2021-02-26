@@ -18,7 +18,7 @@ namespace NYourCodeAsCrimeScene.UnitTests
         public CommitBuilder WithDefaultValues()
         {
             var project = new ProjectBuilder().WithDefaultValues().Build();
-            _gitCommit = new GitCommit( "CommitId-1", DateTime.Now, project );
+            _gitCommit = new GitCommit( "CommitId-1", DateTime.Now );
 
             return this;
         }

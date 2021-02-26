@@ -7,13 +7,12 @@ namespace NYourCodeAsCrimeScene.Core.Entities
 {
     public class GitCommit : BaseEntity, IAggregateRoot
     {
-        public GitCommit(string commitId, in DateTime date, Project project) : this()
+        public GitCommit(string commitId, in DateTime date) : this()
         {
             if (commitId.Contains(" "))
                 throw new ArgumentException("CommitId can't contain a space.");
             CommitId = commitId;
             Date = date;
-            Project = project;
         }
 
         private GitCommit()
@@ -26,6 +25,7 @@ namespace NYourCodeAsCrimeScene.Core.Entities
 
         public Project Project { get; set; }
         public List<GitFile> GitFiles { get; set; }
+        public int ProjectId { get; set; }
 
         public void AddFile(GitFile gitFile)
         {
