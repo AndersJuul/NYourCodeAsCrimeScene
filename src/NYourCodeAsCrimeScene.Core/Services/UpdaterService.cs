@@ -83,9 +83,9 @@ namespace NYourCodeAsCrimeScene.Core.Services
                     }
                 }
 
-                _logger.LogInformation("Project: " + JsonConvert.SerializeObject( new Analyzer(project).GetTop(5),Formatting.Indented));
-                
                 await _unitOfWork.CommitChanges();
+                
+                _logger.LogInformation(commitsAdded + " commits added to Project: " + JsonConvert.SerializeObject(new Analyzer(project).GetTop(5), Formatting.Indented));
             }
             catch (Exception e)
             {

@@ -8,9 +8,9 @@ using NYourCodeAsCrimeScene.Core.Services;
 
 namespace NYourCodeAsCrimeScene.Infrastructure
 {
-    public class CommitQueryHandler : IRequestHandler<CommitQuery, IEnumerable<CommitDto>>
+    public class CommitQueryHandler : IRequestHandler<CommitQuery, CommitDto[]>
     {
-        public async Task<IEnumerable<CommitDto>> Handle(CommitQuery request, CancellationToken cancellationToken)
+        public async Task<CommitDto[]> Handle(CommitQuery request, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -39,10 +39,10 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 });
             }
 
-            return result;
+            return result.ToArray();
         }
     }
-    public class CommitQuery : IRequest<IEnumerable<CommitDto>>
+    public class CommitQuery : IRequest<CommitDto[]>
     {
         public string[] Output { get; }
 

@@ -24,17 +24,24 @@ namespace NYourCodeAsCrimeScene.Web.HostedServices
             await Task.CompletedTask;
             
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(5));
+                TimeSpan.FromSeconds(30));
         }
 
         private async void DoWork(object state)
         {
-            _logger.LogInformation("Timed Hosted Service is working. Count.");
+            try
+            {
+                _logger.LogInformation("Timed Hosted Service is working. Count.");
 
-            var serviceScope = _serviceProvider.CreateScope();
-            var updaterService = serviceScope.ServiceProvider.GetRequiredService<IUpdaterService>();
-            await updaterService.Update(projectName: "NYourCodeAsCrimeScene",
-                projectPath: @"C:\Projects\NYourCodeAsCrimeScene",5);
+                var serviceScope = _serviceProvider.CreateScope();
+                var updaterService = serviceScope.ServiceProvider.GetRequiredService<IUpdaterService>();
+                await updaterService.Update(projectName: "NYourCodeAsCrimeScene",
+                    projectPath: @"C:\Projects\NYourCodeAsCrimeScene", 1);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e,"During DoWork");
+            }
         }
 
 

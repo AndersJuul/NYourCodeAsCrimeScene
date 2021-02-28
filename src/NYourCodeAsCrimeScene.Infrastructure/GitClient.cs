@@ -21,7 +21,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
             _logger = logger;
         }
 
-        public async Task<IEnumerable<CommitDto>> GetCommits(string projectName, string projectPath, string[] fileExt)
+        public async Task<CommitDto[]> GetCommits(string projectName, string projectPath, string[] fileExt)
         {
             _logger.LogInformation("Getting commits from " + projectPath);
             var output = await GetResultOfexecutingGit(projectPath, "log --date=iso");
@@ -31,7 +31,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
             return result;
         }
 
-        public async Task<IEnumerable<FileDto>> GetFiles(string projectPath, string commitId)
+        public async Task<FileDto[]> GetFiles(string projectPath, string commitId)
         {
             _logger.LogInformation("Getting files from commit: " + commitId);
             var output = await GetResultOfexecutingGit(projectPath, "diff-tree --root --no-commit-id --name-only -r "+commitId);

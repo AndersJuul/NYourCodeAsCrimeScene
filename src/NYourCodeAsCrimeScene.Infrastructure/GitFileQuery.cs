@@ -8,9 +8,9 @@ using NYourCodeAsCrimeScene.Core.Services;
 
 namespace NYourCodeAsCrimeScene.Infrastructure
 {
-    public class GitFileQueryHandler : IRequestHandler<GitFileQuery, IEnumerable<FileDto>>
+    public class GitFileQueryHandler : IRequestHandler<GitFileQuery, FileDto[]>
     {
-        public async Task<IEnumerable<FileDto>> Handle(GitFileQuery request, CancellationToken cancellationToken)
+        public async Task<FileDto[]> Handle(GitFileQuery request, CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
 
@@ -23,10 +23,10 @@ namespace NYourCodeAsCrimeScene.Infrastructure
                 result.Add(new FileDto{Name = fileName});
             }
 
-            return result;
+            return result.ToArray();
         }
     }
-    public class GitFileQuery : IRequest<IEnumerable<FileDto>>
+    public class GitFileQuery : IRequest<FileDto[]>
     {
         public string[] Output { get; }
 
