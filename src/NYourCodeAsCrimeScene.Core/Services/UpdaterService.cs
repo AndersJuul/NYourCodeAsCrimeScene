@@ -46,7 +46,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
                     var commit = project.CommitById(commitDto.CommitId);
                     if (commit==null)
                     {
-                        commit = new GitCommit( commitDto.CommitId, commitDto.Date){Project = project};
+                        commit = new GitCommit( commitDto.CommitId, commitDto.Date, project);
                     }
 
                     if (!commit.GitFiles.Any())
