@@ -21,7 +21,7 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Infrastructure
 
             await updaterService.Update(
                 "NYourCodeAsCrimeScene",
-                @"C:\Projects\NYourCodeAsCrimeScene", 2);
+                @"C:\Projects\NYourCodeAsCrimeScene", 10);
 
             // Assert
             var repository = CreateServiceProvider().GetRequiredService<IRepository>();

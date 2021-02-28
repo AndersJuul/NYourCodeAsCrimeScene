@@ -8,6 +8,7 @@ using NYourCodeAsCrimeScene.Core.Interfaces;
 using NYourCodeAsCrimeScene.Core.Specifications;
 using NYourCodeAsCrimeScene.SharedKernel;
 using NYourCodeAsCrimeScene.SharedKernel.Interfaces;
+using Serilog.Context;
 
 namespace NYourCodeAsCrimeScene.Core.Services
 {
@@ -43,6 +44,8 @@ namespace NYourCodeAsCrimeScene.Core.Services
                     _logger.LogInformation("Project known; updating: " + projectName);
                 }
 
+                using var property = LogContext.PushProperty("ProjectName", projectName);
+
                 var commits = await _gitClient
                     .GetCommits(projectName, projectPath, new[] { "cs" });
 
@@ -56,28 +59,31 @@ namespace NYourCodeAsCrimeScene.Core.Services
                     if (commitsAdded >= maxCommitsToInclude)
                         break;
 
-                    var commit = new GitCommit(commitDto.CommitId, commitDto.Date, project);
-                    project.Commits.Add(commit);
-                    commitsAdded++;
-
-                    var fileDtos = await _gitClient
-                        .GetFiles(projectPath, commit.CommitId);
-
-                    foreach (var fileDto in fileDtos)
+                    using (LogContext.PushProperty("CommitId", commitDto.CommitId))
                     {
-                        try
-                        {
-                            var fileContent =
-                                await _gitClient.GetFileContent(projectPath, commit.CommitId, fileDto.Name);
+                        var commit = new GitCommit(commitDto.CommitId, commitDto.Date, project);
+                        project.Commits.Add(commit);
+                        commitsAdded++;
 
-                            var gitFile = new GitFile(fileDto.Name, fileContent.Length, commit);
-                            var gitFileEntry = new GitFileEntry(gitFile, fileContent.Length);
-                            gitFile.AddGitFileEntry(gitFileEntry);
-                            commit.AddFile(gitFile);
-                        }
-                        catch (Exception e)
+                        var fileDtos = await _gitClient
+                            .GetFiles(projectPath, commit.CommitId);
+
+                        foreach (var fileDto in fileDtos)
                         {
-                            _logger.LogError(e, "Exception during file content retrieval. File not added to commit: {filename}" , fileDto.Name);
+                            try
+                            {
+                                var fileContent =
+                                    await _gitClient.GetFileContent(projectPath, commit.CommitId, fileDto.Name);
+
+                                var gitFile = new GitFile(fileDto.Name, fileContent.Length, commit);
+                                var gitFileEntry = new GitFileEntry(gitFile, fileContent.Length);
+                                gitFile.AddGitFileEntry(gitFileEntry);
+                                commit.AddFile(gitFile);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError(e, "Exception during file content retrieval. File not added to commit: {filename}", fileDto.Name);
+                            }
                         }
                     }
                 }
