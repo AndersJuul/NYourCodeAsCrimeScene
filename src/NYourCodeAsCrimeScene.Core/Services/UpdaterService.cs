@@ -77,8 +77,7 @@ namespace NYourCodeAsCrimeScene.Core.Services
                         }
                         catch (Exception e)
                         {
-                            _logger.LogError(e,
-                                "Exception during file content retrieval. File not added to commit: " + fileDto.Name);
+                            _logger.LogError(e, "Exception during file content retrieval. File not added to commit: {filename}" , fileDto.Name);
                         }
                     }
                 }

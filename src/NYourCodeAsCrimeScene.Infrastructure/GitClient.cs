@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using MediatR;
@@ -23,7 +22,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
 
         public async Task<CommitDto[]> GetCommits(string projectName, string projectPath, string[] fileExt)
         {
-            _logger.LogInformation("Getting commits from " + projectPath);
+            _logger.LogDebug("Getting commits from " + projectPath);
             var output = await GetResultOfexecutingGit(projectPath, "log --date=iso");
 
             var result = await _mediator.Send(new CommitQuery(output.Split("\n")));
@@ -33,7 +32,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
 
         public async Task<FileDto[]> GetFiles(string projectPath, string commitId)
         {
-            _logger.LogInformation("Getting files from commit: " + commitId);
+            _logger.LogDebug("Getting files from commit: " + commitId);
             var output = await GetResultOfexecutingGit(projectPath, "diff-tree --root --no-commit-id --name-only -r "+commitId);
 
             var result = await _mediator.Send(new GitFileQuery(output.Split("\n")));
@@ -43,7 +42,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure
 
         public async Task<string[]> GetFileContent(string projectPath, string commitId, string fileDtoName)
         {
-            _logger.LogInformation("Getting contents of file: "  );
+            _logger.LogDebug("Getting contents of file: "+fileDtoName  );
             var output = await GetResultOfexecutingGit(projectPath, $"show {commitId}:{fileDtoName}" );
 
             var result = output.Split("\n");

@@ -34,7 +34,15 @@ namespace NYourCodeAsCrimeScene.IntegrationTests
 
         protected IServiceProvider CreateServiceProvider()
         {
-            Program.ConfigureLogging();
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddJsonFile("testsettings.json", optional: true, reloadOnChange: true);
+            var configurationRoot = configurationBuilder
+                .Build();
+
+            Program.ConfigureLogging(configurationRoot,environment);
 
             Log.Logger = Log.ForContext("IsTest", true);
             

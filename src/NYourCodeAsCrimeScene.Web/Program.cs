@@ -17,10 +17,19 @@ namespace NYourCodeAsCrimeScene.Web
     {
         public static void Main(string[] args)
         {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                .AddJsonFile("testsettings.json", optional: true, reloadOnChange: true);
+            var configurationRoot = configurationBuilder
+                .Build();
+
             //configure logging first
-            ConfigureLogging();
+            ConfigureLogging(configurationRoot,environment);
             
-            var host = CreateHostBuilder(args).Build();
+            var host = CreateHostBuilder(args,configurationRoot,configurationBuilder)
+                .Build();
 
             using (var scope = host.Services.CreateScope())
             {
@@ -43,7 +52,8 @@ namespace NYourCodeAsCrimeScene.Web
             host.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args, IConfigurationRoot configurationRoot,
+            IConfigurationBuilder configurationBuilder)
         {
             return Host.CreateDefaultBuilder(args)
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -51,26 +61,14 @@ namespace NYourCodeAsCrimeScene.Web
                 {
                     webBuilder
                         .UseStartup<Startup>()
-                        .ConfigureAppConfiguration(configuration =>
-                        {
-                            configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                            configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true);
-                        })
+                        .ConfigureAppConfiguration(_ => configurationBuilder.Build())
                         .UseSerilog();
                 });
         }
 
-        public static void ConfigureLogging()
+        public static void ConfigureLogging(IConfigurationRoot configuration, string? environment)
         {
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(
-                    $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                    optional: true)
-                .Build();
-
-            var elasticsearchSinkOptions = ConfigureElasticSink(configuration, environment);
+            var elasticsearchSinkOptions = ConfigureElasticSink(configuration);
             
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
@@ -81,7 +79,7 @@ namespace NYourCodeAsCrimeScene.Web
                 .CreateLogger();
         }
 
-        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration, string environment)
+        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfigurationRoot configuration)
         {
             var uriString = configuration["ElasticConfiguration:Uri"];
             var node = new Uri(uriString);
