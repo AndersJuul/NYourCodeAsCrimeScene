@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NYourCodeAsCrimeScene.Infrastructure.Data;
 using NYourCodeAsCrimeScene.Web;
+using Serilog;
 using Xunit.Abstractions;
 
 namespace NYourCodeAsCrimeScene.IntegrationTests
@@ -16,10 +17,27 @@ namespace NYourCodeAsCrimeScene.IntegrationTests
     {
         protected IntegrationTestBaseWithIoc(ITestOutputHelper output) : base(output)
         {
+            var services = CreateServiceProvider();
+            try
+            {
+                var context = services.GetRequiredService<AppDbContext>();
+                context.Database.EnsureDeleted();
+                context.Database.Migrate();
+                SeedData.Initialize(services);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred seeding the DB.");
+            }
         }
 
         protected IServiceProvider CreateServiceProvider()
         {
+            Program.ConfigureLogging();
+
+            Log.Logger = Log.ForContext("IsTest", true);
+            
             var host = Host.CreateDefaultBuilder(new string[] { })
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -35,23 +53,12 @@ namespace NYourCodeAsCrimeScene.IntegrationTests
                         {
                             logging.ClearProviders();
                             logging.AddConsole();
-                        });
+                        })
+                        .UseSerilog();
                 }).Build();
 
             var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
-
-            try
-            {
-                var context = services.GetRequiredService<AppDbContext>();
-                context.Database.Migrate();
-                SeedData.Initialize(services);
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred seeding the DB.");
-            }
 
             return services;
         }

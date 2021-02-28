@@ -11,6 +11,7 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Data
         [Fact]
         public async Task AddsItemAndSetsId()
         {
+            await Task.CompletedTask;
             //var repository = GetRepository();
             //var item = new ToDoItemBuilder().Build();
 

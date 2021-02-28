@@ -34,7 +34,7 @@ namespace NYourCodeAsCrimeScene.Web.HostedServices
             var serviceScope = _serviceProvider.CreateScope();
             var updaterService = serviceScope.ServiceProvider.GetRequiredService<IUpdaterService>();
             await updaterService.Update(projectName: "NYourCodeAsCrimeScene",
-                projectPath: @"C:\Projects\NYourCodeAsCrimeScene");
+                projectPath: @"C:\Projects\NYourCodeAsCrimeScene",5);
         }
 
 

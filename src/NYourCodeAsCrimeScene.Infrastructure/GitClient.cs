@@ -41,13 +41,13 @@ namespace NYourCodeAsCrimeScene.Infrastructure
             return result;
         }
 
-        public async Task<IEnumerable<string>> GetFileContent(string projectPath, string commitId, string fileDtoName)
+        public async Task<string[]> GetFileContent(string projectPath, string commitId, string fileDtoName)
         {
             _logger.LogInformation("Getting contents of file: "  );
             var output = await GetResultOfexecutingGit(projectPath, $"show {commitId}:{fileDtoName}" );
 
-            var result = output.Split(Environment.NewLine);
-
+            var result = output.Split("\n");
+            
             return result;
         }
 

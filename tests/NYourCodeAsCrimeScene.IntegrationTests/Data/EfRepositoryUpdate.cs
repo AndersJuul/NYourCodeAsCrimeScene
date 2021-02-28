@@ -13,6 +13,7 @@ namespace NYourCodeAsCrimeScene.IntegrationTests.Data
         [Fact]
         public async Task UpdatesItemAfterAddingIt()
         {
+            await Task.CompletedTask;
             //// add an item
             //var repository = GetRepository();
             //var initialTitle = Guid.NewGuid().ToString();

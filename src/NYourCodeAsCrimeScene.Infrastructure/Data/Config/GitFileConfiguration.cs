@@ -11,10 +11,11 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Data.Config
             builder
                 .Property(t => t.Name)
                 .IsRequired();
-            builder.HasMany(x => x.GitFileEntries)
-                .WithOne(x=>x.GitFile);
             builder
-                .HasIndex(x=> new {x.Name, x.GitCommitId})
+                .HasMany(x => x.GitFileEntries)
+                .WithOne(x => x.GitFile);
+            builder
+                .HasIndex(x => new { x.Name, x.GitCommitId })
                 .IsUnique();
         }
     }

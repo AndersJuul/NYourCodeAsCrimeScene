@@ -32,7 +32,7 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -49,20 +49,44 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int?>("GitCommitId")
+                    b.Property<int>("GitCommitId")
                         .HasColumnType("int");
 
                     b.Property<int>("Length")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GitCommitId");
 
+                    b.HasIndex("Name", "GitCommitId")
+                        .IsUnique();
+
                     b.ToTable("GitFile");
+                });
+
+            modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.GitFileEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("FileLength")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GitFileId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GitFileId");
+
+                    b.ToTable("GitFileEntry");
                 });
 
             modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.Project", b =>
@@ -91,7 +115,9 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Migrations
                 {
                     b.HasOne("NYourCodeAsCrimeScene.Core.Entities.Project", "Project")
                         .WithMany("Commits")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
                 });
@@ -100,14 +126,30 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Migrations
                 {
                     b.HasOne("NYourCodeAsCrimeScene.Core.Entities.GitCommit", "GitCommit")
                         .WithMany("GitFiles")
-                        .HasForeignKey("GitCommitId");
+                        .HasForeignKey("GitCommitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("GitCommit");
+                });
+
+            modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.GitFileEntry", b =>
+                {
+                    b.HasOne("NYourCodeAsCrimeScene.Core.Entities.GitFile", "GitFile")
+                        .WithMany("GitFileEntries")
+                        .HasForeignKey("GitFileId");
+
+                    b.Navigation("GitFile");
                 });
 
             modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.GitCommit", b =>
                 {
                     b.Navigation("GitFiles");
+                });
+
+            modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.GitFile", b =>
+                {
+                    b.Navigation("GitFileEntries");
                 });
 
             modelBuilder.Entity("NYourCodeAsCrimeScene.Core.Entities.Project", b =>

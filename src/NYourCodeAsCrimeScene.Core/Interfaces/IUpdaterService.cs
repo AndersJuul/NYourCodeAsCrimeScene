@@ -4,6 +4,6 @@ namespace NYourCodeAsCrimeScene.Core.Interfaces
 {
     public interface IUpdaterService
     {
-        Task Update(string projectName, string projectPath);
+        Task Update(string projectName, string projectPath, int maxCommitsToInclude);
     }
 }

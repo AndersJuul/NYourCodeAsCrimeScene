@@ -12,6 +12,11 @@ namespace NYourCodeAsCrimeScene.Infrastructure.Data.Config
             //    .Property(t => t.Project)
             //    .IsRequired()
             //    .HasColumnName("ProjectId");
+            builder
+                .HasMany(x => x.GitFiles)
+                .WithOne(x => x.GitCommit)
+                .HasForeignKey(x => x.GitCommitId)
+                .IsRequired();
         }
     }
 }

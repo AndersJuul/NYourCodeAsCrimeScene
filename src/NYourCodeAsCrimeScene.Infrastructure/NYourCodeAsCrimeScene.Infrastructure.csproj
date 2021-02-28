@@ -21,4 +21,8 @@
     <ProjectReference Include="..\NYourCodeAsCrimeScene.Core\NYourCodeAsCrimeScene.Core.csproj" />
     <ProjectReference Include="..\NYourCodeAsCrimeScene.SharedKernel\NYourCodeAsCrimeScene.SharedKernel.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 </Project>

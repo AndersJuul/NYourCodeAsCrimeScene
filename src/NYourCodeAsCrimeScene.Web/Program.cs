@@ -60,7 +60,7 @@ namespace NYourCodeAsCrimeScene.Web
                 });
         }
 
-        private static void ConfigureLogging()
+        public static void ConfigureLogging()
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
@@ -74,7 +74,6 @@ namespace NYourCodeAsCrimeScene.Web
             
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.Debug()
                 .WriteTo.Console()
                 .WriteTo.Elasticsearch(elasticsearchSinkOptions)
                 .Enrich.WithProperty("Environment", environment)
