@@ -69,7 +69,12 @@ namespace NYourCodeAsCrimeScene.Infrastructure
             await process.WaitForExitAsync();
 
             if (process.ExitCode != 0)
+            {
+                _logger.LogError($"Executed, failed: {gitPath} {arguments}");
                 throw new InvalidOperationException(process.ExitCode.ToString());
+            }
+            _logger.LogInformation($"Executed, succeeded: {gitPath} {arguments}");
+
             return output;
         }
     }
